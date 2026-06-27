@@ -12,17 +12,17 @@ import applicationRoutes from "./routes/application.route.js"
 const app = express();
 
 // middleware
-
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
-
 const corsOption = {
   origin: process.env.CLIENT_URL,
   credentials: true,
 };
 
 app.use(cors(corsOption));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
 
 // user api
 app.use("/api/v1/user", userRoute);
