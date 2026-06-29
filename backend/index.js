@@ -15,6 +15,7 @@ const app = express();
 const corsOption = {
   origin: process.env.CLIENT_URL,
   credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 app.set("trust proxy", 1);
 app.use(cors(corsOption));
