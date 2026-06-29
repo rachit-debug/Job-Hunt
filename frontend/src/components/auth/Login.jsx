@@ -9,7 +9,7 @@ import { USER_API_END_POINT } from "../../utils/constant";
 import axios from "axios";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser } from "../../redux/authSlice";
+import { setLoading, setToken, setUser } from "../../redux/authSlice";
 import { Loader2 } from "lucide-react";
 
 function Login() {
@@ -41,6 +41,7 @@ function Login() {
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
+        dispatch(setToken(res.data.token));
         dispatch(setUser(res.data.user));
         navigate("/");
         toast.success(res.data.message);

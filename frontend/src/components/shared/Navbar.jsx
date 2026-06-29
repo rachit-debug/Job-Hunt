@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { USER_API_END_POINT } from "../../utils/constant";
 import { toast } from "sonner";
-import { setUser } from "../../redux/authSlice";
+import { setToken, setUser } from "../../redux/authSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -24,6 +24,7 @@ const Navbar = () => {
 
       if (res.data.success) {
         localStorage.removeItem("token"); // Token delete karo
+        dispatch(setToken(null))
         dispatch(setUser(null));
         navigate("/login");
         toast.success(res.data.message);
