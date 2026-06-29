@@ -1,32 +1,37 @@
-  import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
+const isAuthenticated = (req, res, next) => {
+  try {
+    console.log("========== AUTH ==========");
+    console.log("Origin:", req.headers.origin);
+    console.log("Cookie Header:", req.headers.cookie);
+    console.log("Parsed Cookies:", req.cookies);
 
-  const isAuthenticated = async (req, res, next) => {
-    try {
-      const token = req.cookies.token;
+    const token = req.cookies?.token;
 
-      if (!token) {
-        return res.status(401).json({
-          message: " user is not authenticated1",
-          success: false,
-        });
-      }
+    console.log("Token:", token);
 
-      const decode = jwt.verify(token, process.env.SECRET_KEY);
-
-      if (!decode) {
-        return res.status(401).json({
-          message: "user is not authenticated2",
-          success: false,
-        });
-      }
-
-      req.id = decode.userId;
-
-      next();
-    } catch (err) {
-      console.log(err);
+    if (!token) {
+      return res.status(401).json({
+        message: "Token not found",
+        success: false,
+      });
     }
-  };
 
-  export default isAuthenticated;
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+
+    console.log("Decoded:", decoded);
+
+    req.id = decoded.userId;
+    next();
+  } catch (err) {
+    console.error("JWT Error:", err);
+
+    return res.status(401).json({
+      message: "Invalid token",
+      success: false,
+    });
+  }
+};
+
+export default isAuthenticated;
