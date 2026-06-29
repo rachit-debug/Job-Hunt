@@ -20,7 +20,7 @@ function Login() {
   });
 
   const navigate = useNavigate();
-  const { loading , user } = useSelector((store) => store.auth);
+  const { loading, user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
 
   const changeEventHandler = (e) => {
@@ -32,15 +32,16 @@ function Login() {
 
     try {
       dispatch(setLoading(true));
+
       const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       });
 
       if (res.data.success) {
-        dispatch(setUser(res.data.user))
+        localStorage.setItem("token", res.data.token);
+        dispatch(setUser(res.data.user));
         navigate("/");
         toast.success(res.data.message);
       }
@@ -52,11 +53,11 @@ function Login() {
     }
   };
 
-  useEffect(()=>{
-    if(user){
-      navigate("/")
+  useEffect(() => {
+    if (user) {
+      navigate("/");
     }
-  })
+  });
 
   return (
     <div>

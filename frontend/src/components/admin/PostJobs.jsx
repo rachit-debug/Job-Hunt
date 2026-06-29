@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 function PostJobs() {
   const { companies } = useSelector((store) => store.company);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [input, setInput] = useState({
     title: "",
@@ -54,19 +54,20 @@ function PostJobs() {
     e.preventDefault();
     try {
       setLoading(true);
+
+      const token = localStorage.getItem("token");
+
       const res = await axios.post(`${JOB_API_END_POINT}/post`, input, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        withCredentials: true,
       });
 
-      if(res.data.success){
-        toast.success(res.data.message)
-        navigate("/admin/jobs")
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate("/admin/jobs");
       }
-
-
     } catch (err) {
       console.log(err);
       toast.error(error.responce.data.message);

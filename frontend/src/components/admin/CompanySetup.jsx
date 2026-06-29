@@ -13,7 +13,7 @@ import useGetCompanyById from "../../hooks/useGetCompanyById";
 
 function CompanySetup() {
   const params = useParams();
-  useGetCompanyById(params.id)
+  useGetCompanyById(params.id);
   const [input, setInput] = useState({
     name: "",
     description: "",
@@ -49,14 +49,16 @@ function CompanySetup() {
     try {
       setLoading(true);
 
+      const token = localStorage.getItem("token");
+
       const res = await axios.put(
         `${COMPANY_API_END_POINT}/update/${params.id}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
           },
-          withCredentials: true,
         },
       );
 
@@ -73,14 +75,14 @@ function CompanySetup() {
   };
 
   useEffect(() => {
-     setInput({
-    name: singleCompany?.name || "",
-    description: singleCompany?.description || "",
-    website: singleCompany?.website || "",
-    location: singleCompany?.location || "",
-    file: singleCompany?.file || null,
-  });
-}, [singleCompany]);
+    setInput({
+      name: singleCompany?.name || "",
+      description: singleCompany?.description || "",
+      website: singleCompany?.website || "",
+      location: singleCompany?.location || "",
+      file: singleCompany?.file || null,
+    });
+  }, [singleCompany]);
 
   return (
     <div>

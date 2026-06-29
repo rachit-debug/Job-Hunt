@@ -10,33 +10,37 @@ import { setAllApplicants } from "../../redux/applicationSlice";
 const Applicants = () => {
   const param = useParams();
   const dispatch = useDispatch();
-  const {applicants} = useSelector(store => store.application)
+  const { applicants } = useSelector((store) => store.application);
   useEffect(() => {
-
-    const fetchAllApplicants = async() => {
+    const fetchAllApplicants = async () => {
       try {
+        const token = localStorage.getItem("token");
+
         const res = await axios.get(
           `${APPLICATION_API_END_POINT}/${param.id}/applicants`,
-          { withCredentials: true },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
 
-        dispatch(setAllApplicants(res.data.job))
-
+        dispatch(setAllApplicants(res.data.job));
       } catch (error) {
         console.log(error);
       }
     };
 
-    fetchAllApplicants()
+    fetchAllApplicants();
   }, []);
-
-
 
   return (
     <div>
       <Navbar />
       <div className="max-w-7xl mx-auto">
-        <h1 className="font-bold text-xl my-5">Applicants {applicants?.applications?.length || 0}</h1>
+        <h1 className="font-bold text-xl my-5">
+          Applicants {applicants?.applications?.length || 0}
+        </h1>
         <ApplicantsTable />
       </div>
     </div>

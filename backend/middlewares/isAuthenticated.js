@@ -2,19 +2,21 @@ import jwt from "jsonwebtoken";
 
 const isAuthenticated = (req, res, next) => {
   try {
+    const authHeader = req.headers.authorization;
 
-    const token = req.cookies?.token;
-
-    if (!token) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res.status(401).json({
-        message: "Token not found",
+        message: "No token found",
         success: false,
       });
     }
 
+    const token = authHeader.split(" ")[1];
+
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
 
     req.id = decoded.userId;
+
     next();
   } catch (err) {
     console.error("JWT Error:", err);

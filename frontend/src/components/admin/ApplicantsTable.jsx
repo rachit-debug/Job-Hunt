@@ -18,23 +18,28 @@ function ApplicantsTable() {
   const shortListingStatus = ["Accepted", "Rejected"];
   const { applicants } = useSelector((store) => store.application);
 
-  const statusHandler = async(status,id)=>{
-    try{
-      axios.defaults.withCredentials = true
-     const res = await axios.post(`${APPLICATION_API_END_POINT}/status/${id}/update`, {status} , {withCredentials : true})
+  const statusHandler = async (status, id) => {
+    try {
+      const token = localStorage.getItem("token");
 
-     if(res.data.success){
-      toast.success(res.data.message)
-     }
+      const res = await axios.post(
+        `${APPLICATION_API_END_POINT}/status/${id}/update`,
+        { status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
 
-
-    }catch(error){
-       console.log(error)
-       toast.error(error.response?.data?.message || "Something went wrong");
+      if (res.data.success) {
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
-  }
-
-
+  };
 
   return (
     <div>
@@ -58,20 +63,19 @@ function ApplicantsTable() {
                   <TableCell>{item?.applicant?.fullname}</TableCell>
                   <TableCell>{item?.applicant?.email}</TableCell>
                   <TableCell>{item?.applicant?.phoneNumber}</TableCell>
-                  <TableCell >
-                     {
-                      item?.applicant?.profile?.resume
-                      ?
-                    <a className="text-blue-600 cursor-pointer"
-                      href={item.applicant?.profile?.resume}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {item?.applicant?.profile?.resumeOriginalName}
-                    </a>
-                    :
-                    <span>NA</span>
-                     }
+                  <TableCell>
+                    {item?.applicant?.profile?.resume ? (
+                      <a
+                        className="text-blue-600 cursor-pointer"
+                        href={item.applicant?.profile?.resume}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {item?.applicant?.profile?.resumeOriginalName}
+                      </a>
+                    ) : (
+                      <span>NA</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {item?.applicant?.createdAt.split("T")[0]}
@@ -85,7 +89,7 @@ function ApplicantsTable() {
                         {shortListingStatus.map((status, index) => {
                           return (
                             <div
-                            onClick={()=> statusHandler(status, item?._id)}
+                              onClick={() => statusHandler(status, item?._id)}
                               key={index}
                               className="flex w-fit items-center my-2 cursor-pointer"
                             >

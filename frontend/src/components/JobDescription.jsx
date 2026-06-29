@@ -31,15 +31,18 @@ function JobDescription() {
 
   const applyJobHandler = async () => {
     try {
+      const token = localStorage.getItem("token");
+
       const res = await axios.get(
         `${APPLICATION_API_END_POINT}/apply/${jobId}`,
         {
-          withCredentials: true,
-        }
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
       if (res.data.success) {
-
         // button instantly disable
         setIsApplied(true);
 
@@ -70,20 +73,16 @@ function JobDescription() {
   useEffect(() => {
     const fetchSingleJob = async () => {
       try {
-        const res = await axios.get(
-          `${JOB_API_END_POINT}/get/${jobId}`,
-          {
-            withCredentials: true,
-          }
-        );
+        const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`, {
+          withCredentials: true,
+        });
 
         if (res.data.success) {
           dispatch(setSingleJob(res.data.job));
 
           // sync button state
           const applied = res.data.job?.application?.some(
-            (application) =>
-              application?.applicant === user?._id
+            (application) => application?.applicant === user?._id,
           );
 
           setIsApplied(applied);
@@ -100,18 +99,15 @@ function JobDescription() {
 
   return (
     <div className="max-w-7xl mx-auto my-10 px-4">
-
       {/* top section */}
 
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-
         <div>
           <h1 className="font-bold text-3xl text-gray-900">
             {singleJob?.title}
           </h1>
 
           <div className="flex flex-wrap items-center gap-3 mt-5">
-
             <Badge
               className="text-blue-700 font-semibold px-4 py-1"
               variant="ghost"
@@ -132,7 +128,6 @@ function JobDescription() {
             >
               {singleJob?.salary} LPA
             </Badge>
-
           </div>
         </div>
 
@@ -152,69 +147,44 @@ function JobDescription() {
       {/* heading */}
 
       <div className="mt-10 border-b border-gray-300 pb-3">
-        <h1 className="text-xl font-bold text-gray-800">
-          Job Description
-        </h1>
+        <h1 className="text-xl font-bold text-gray-800">Job Description</h1>
       </div>
 
       {/* details */}
 
       <div className="mt-8 space-y-5">
-
         <div className="flex gap-3">
-          <span className="font-bold min-w-[180px]">
-            Role:
-          </span>
+          <span className="font-bold min-w-[180px]">Role:</span>
 
-          <span className="text-gray-700">
-            {singleJob?.title}
-          </span>
+          <span className="text-gray-700">{singleJob?.title}</span>
         </div>
 
         <div className="flex gap-3">
-          <span className="font-bold min-w-[180px]">
-            Location:
-          </span>
+          <span className="font-bold min-w-[180px]">Location:</span>
 
-          <span className="text-gray-700">
-            {singleJob?.location}
-          </span>
+          <span className="text-gray-700">{singleJob?.location}</span>
         </div>
 
         <div className="flex gap-3">
-          <span className="font-bold min-w-[180px]">
-            Description:
-          </span>
+          <span className="font-bold min-w-[180px]">Description:</span>
 
-          <span className="text-gray-700">
-            {singleJob?.description}
-          </span>
+          <span className="text-gray-700">{singleJob?.description}</span>
         </div>
 
         <div className="flex gap-3">
-          <span className="font-bold min-w-[180px]">
-            Experience:
-          </span>
+          <span className="font-bold min-w-[180px]">Experience:</span>
 
-          <span className="text-gray-700">
-            {singleJob?.experienceLevel}
-          </span>
+          <span className="text-gray-700">{singleJob?.experienceLevel}</span>
         </div>
 
         <div className="flex gap-3">
-          <span className="font-bold min-w-[180px]">
-            Salary:
-          </span>
+          <span className="font-bold min-w-[180px]">Salary:</span>
 
-          <span className="text-gray-700">
-            {singleJob?.salary} LPA
-          </span>
+          <span className="text-gray-700">{singleJob?.salary} LPA</span>
         </div>
 
         <div className="flex gap-3">
-          <span className="font-bold min-w-[180px]">
-            Total Applicants:
-          </span>
+          <span className="font-bold min-w-[180px]">Total Applicants:</span>
 
           <span className="text-gray-700">
             {singleJob?.application?.length || 0}
@@ -222,15 +192,12 @@ function JobDescription() {
         </div>
 
         <div className="flex gap-3">
-          <span className="font-bold min-w-[180px]">
-            Posted Date:
-          </span>
+          <span className="font-bold min-w-[180px]">Posted Date:</span>
 
           <span className="text-gray-700">
             {singleJob?.createdAt?.split("T")[0]}
           </span>
         </div>
-
       </div>
     </div>
   );

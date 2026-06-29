@@ -1,30 +1,35 @@
-import axios from "axios"
-import { useEffect } from "react"
-import { COMPANY_API_END_POINT } from "../utils/constant"
-import { useDispatch } from "react-redux"
-import { setSingleCompany } from "../redux/companySlice"
-
-
+import axios from "axios";
+import { useEffect } from "react";
+import { COMPANY_API_END_POINT } from "../utils/constant";
+import { useDispatch } from "react-redux";
+import { setSingleCompany } from "../redux/companySlice";
 
 const useGetCompanyById = (comapnyId) => {
-     const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-     useEffect(()=>{
-      const fetchSingleCompany = async() =>{
-        try{
-           const res = await axios.get(`${COMPANY_API_END_POINT}/get/${comapnyId}` , {withCredentials : true})
-           if(res.data.success){
-             dispatch(setSingleCompany(res.data.company))
+  useEffect(() => {
+    const fetchSingleCompany = async () => {
+      try {
+        const token = localStorage.getItem("token");
 
-           }
+        const res = await axios.get(
+          `${COMPANY_API_END_POINT}/get/${comapnyId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
-        }catch(error){
-          console.log(error)
+        if (res.data.success) {
+          dispatch(setSingleCompany(res.data.company));
         }
+      } catch (error) {
+        console.log(error);
       }
-      fetchSingleCompany()
-     },[comapnyId,dispatch])
-}
+    };
+    fetchSingleCompany();
+  }, [comapnyId, dispatch]);
+};
 
-export default useGetCompanyById
-
+export default useGetCompanyById;

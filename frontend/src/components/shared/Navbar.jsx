@@ -20,10 +20,10 @@ const Navbar = () => {
   const LogoutHandler = async () => {
     // logout api
     try {
-      const res = await axios.get(`${USER_API_END_POINT}/logout`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(`${USER_API_END_POINT}/logout`);
+
       if (res.data.success) {
+        localStorage.removeItem("token"); // Token delete karo
         dispatch(setUser(null));
         navigate("/login");
         toast.success(res.data.message);
