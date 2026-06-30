@@ -13,7 +13,7 @@ const app = express();
 
 // middleware
 const corsOption = {
-  origin: process.env.CLIENT_URL,
+  origin: [process.env.CLIENT_URL, "https://phenomenal-sawine-8d77ba.netlify.app"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"]
 };
